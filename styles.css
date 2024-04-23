@@ -1,0 +1,168 @@
+* {
+  margin: 0px;
+  padding: 0px;
+}
+
+#header-div {
+  min-height: 60px;
+  background-color: rgba(59, 15, 123);
+  width: 100%;
+  border-bottom: solid 2px rgba(27, 190, 177, 0.5);
+}
+
+#header-title {
+  color: white;
+  line-height: 60px;
+  font-family: Ubuntu;
+  padding-left: 30px;
+  float: left;
+}
+
+#header-button {
+  float: right;
+  margin-right: 30px;
+  margin-top: 15px;
+  font-family: Ubuntu;
+  font-size: 15px;
+  color: white;
+  background-color: rgba(59, 15, 123, 0.5);
+  padding: 5px 5px;
+
+  border-radius: 10px;
+  border: 2px solid white;
+}
+
+#header-button:hover {
+  background-color: white;
+  color: rgba(59, 15, 123, 0.5);
+}
+#header-button:active {
+  background-color: rgba(59, 15, 123, 0.5);
+  color: white;
+}
+
+#header-button-add {
+  float: right;
+  margin-right: 30px;
+  margin-top: 15px;
+  font-family: Ubuntu;
+  font-size: 15px;
+  color: white;
+  background-color: rgba(59, 15, 123, 0.5);
+  padding: 5px 5px;
+
+  border-radius: 10px;
+  border: 2px solid white;
+}
+
+#header-button-add:hover {
+  background-color: white;
+  color: rgba(59, 15, 123, 0.5);
+}
+
+#header-button-add:active {
+  background-color: rgba(59, 15, 123, 0.5);
+  color: white;
+}
+
+#main-div {
+  width: 100%;
+
+  min-height: 1500px;
+  background: linear-gradient(to right, #38117b, #1df3c2);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.default-raw-div {
+  width: 100%;
+  min-height: 250px;
+
+  box-sizing: border-box;
+}
+
+.default-raw-div .box:nth-child(1) {
+  float: left;
+  color: white;
+  font-family: Ubuntu;
+
+  text-align: center;
+  min-height: 200px;
+  width: 30%;
+  margin-left: 2%;
+  margin-top: 5%;
+}
+
+.default-raw-div .box:nth-child(2) {
+  font-family: Ubuntu;
+  text-align: center;
+  float: left;
+  color: white;
+  min-height: 200px;
+  width: 30%;
+  margin-left: 3%;
+  margin-top: 5%;
+  min-height: 200px;
+}
+
+.default-raw-div .box:nth-child(3) {
+  background-color: white;
+  float: left;
+  color: black;
+  min-height: 200px;
+  width: 30%;
+  min-height: 200px;
+  margin-left: 3%;
+  margin-top: 5%;
+}
+
+.text-box {
+  margin-top: 15%;
+}
+
+#map0 {
+  width: 100%;
+  height: 200px;
+  padding-right: 10px;
+}
+#map1 {
+  width: 100%;
+  height: 200px;
+  padding-right: 10px;
+}
+
+#map2 {
+  width: 100%;
+  height: 200px;
+  padding-right: 10px;
+}
+
+#map3 {
+  width: 100%;
+  height: 200px;
+  padding-right: 10px;
+}
+
+.newRowDiv1 {
+  float: left;
+  color: white;
+  font-family: Ubuntu;
+  text-align: center;
+  min-height: 200px;
+  width: 30%;
+  margin-left: 2%;
+  margin-top: 5%;
+}
+
+.enter-Location {
+  border-radius: 10px;
+  border-color: grey;
+  border: 2px solid rgba(54, 254, 254, 0.5);
+  padding: 15px;
+  font-size: 15px;
+  color: black;
+  float: left;
+  margin-left: 110px;
+  margin-top: 55px;
+}
