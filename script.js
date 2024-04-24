@@ -4,9 +4,12 @@ const defaultDiv = document.getElementById("default-div");
 const resetBtn = document.getElementById("header-button");
 const addNewSearchBtn = document.getElementById("header-button-add");
 
+// Checkpoints and markers
+var i = 0;
 var id = 0;
 var isEditMode = false;
 var isEnteredValue = true;
+
 // Load timezones API:
 async function getTimeZone() {
   const apiKey = `PA82PEZZOIPM`;
@@ -22,7 +25,6 @@ async function myLocationTime(latitude, longitude) {
   const res = await getTimeZone();
   const localCity = new LocationMethods(latitude, longitude);
   localCity.getLocationFromCoordinates(latitude, longitude);
-  console.log(data);
 }
 
 // Load current coordinates:
@@ -31,7 +33,6 @@ function loadCurrentLocation() {
   function success(pos) {
     const currentLatitude = pos.coords.latitude;
     const currentLongitude = pos.coords.longitude;
-
     window.currentLatitude = currentLatitude;
     window.currentLongitude = currentLongitude;
     const test = new LocationMethods(currentLatitude, currentLongitude);
@@ -51,7 +52,6 @@ function loadCurrentLocation() {
 loadCurrentLocation();
 
 // Location methods class:
-
 class LocationMethods {
   constructor(latitude, longitude, location) {
     this.latitude = latitude;
@@ -67,11 +67,8 @@ class LocationMethods {
     const res = await fetch(locationApi);
     let data = await res.json();
     this.resultCity = data;
-    console.log(data);
     const latitude = data[0].lat;
     const longitude = data[0].lon;
-    console.log(latitude);
-    console.log(longitude);
     const result = `${latitude},${longitude}`;
     return result;
   }
@@ -83,19 +80,10 @@ class LocationMethods {
     let data = await res.json();
 
     return `${data.address.city}, ${data.address.country}`;
-    //let resultLocation = data.address.city;
   }
 }
 
-//
-//
-//
-//
-//
-//
-//
-//
-// Create NewDiv
+// Create NewDiv class
 class Div {
   constructor(id, latitude, longitude, location) {
     this.id = id;
@@ -104,21 +92,10 @@ class Div {
     this.location = location;
   }
 
-  // GetLocationFromCoordinades method
-  // async getLocationFromCoordinates(latitude, longitude) {
-  //   let coordsApi = `https://geocode.maps.co/reverse?lat=${latitude}&lon=${longitude}&api_key=66263a98a7113516974463kogfd6fdb`;
-  //   const res = await fetch(coordsApi);
-  //   let data = await res.json();
-  //   let resultLocation = data.address.city;
-  //   console.log(data.address.city);
-  //   return resultLocation;
-  // }
   createDefaultDiv() {
-    console.log(this.location);
     const location = document.getElementById("your-location-text");
     location.classList.add("text-box");
     location.innerHTML = `<p> Your Location: </p> <p> ${this.location}  </p>`; // -- VNESI TUKA KAKO DA PROCITA LOKACIJA VSUSNOST!!! ...
-    // mainDiv.appendChild(location);
     getTimeZone().then((data) => {
       data.zones.forEach((country) => {
         if (country.zoneName.includes(this.location.split(",")[0])) {
@@ -148,15 +125,11 @@ class Div {
       placeholder="Enter City or Region"
     />
 </form>`;
-    console.log(`OVA E ID MOMENTALNO ${this.id}`);
     newDiv.appendChild(newForm);
     newDefaultDiv.appendChild(newDiv);
     mainDiv.appendChild(newDefaultDiv);
 
     const form = document.getElementById(`add-location-${this.id}`);
-
-    console.log(`OVA E ID MOMENTALNO ${this.id} pred eventlisenerot`);
-
     form.addEventListener("submit", (event) => {
       let searchInput = this.searchRegion(event);
       let newSearch = new LocationMethods(0, 0, searchInput);
@@ -165,18 +138,17 @@ class Div {
         const longitude = result.split(",")[1];
         this.latitude = latitude;
         this.longitude = longitude;
-        console.log(this.latitude, this.longitude);
         window.myGlobalArray.zones.forEach((country) => {
+          i++;
           if (country.zoneName.includes(searchInput)) {
-            console.log(country);
             const timestamp = country.timestamp;
             const gmtOffset = country.gmtOffset;
-
-            console.log(timestamp, gmtOffset);
-            console.log(this.createSecondBox(timestamp, gmtOffset));
-            console.log("hello ladies");
-          } else {
-            console.log("Not found");
+            this.createSecondBox(timestamp, gmtOffset);
+            i = 0;
+          }
+          if (i === 418) {
+            alert("City/Region not found, please try again");
+            i = 0;
             return;
           }
         });
@@ -194,28 +166,17 @@ class Div {
     newText.innerHTML = `Loading...`;
     newDiv.appendChild(newText);
     defaultDiv.appendChild(newDiv);
-    console.log(this.id);
     this.convertTimestamp(timestamp, gmtOffset);
     this.createMap(this.id);
-
-    // const defaultDiv = document.getElementById(`default-div-${this.id}`);
-    // const smallDiv = document.getElementById(`new-parent-div-${this.id}`);
-    // smallDiv.appendChild(newTime);
-    // defaultDiv.appendChild(smallDiv);
   }
   //Create Map
   createMap(id) {
-    console.log(`MAPATA E UKLUCENA`);
     const newMapParentDiv = document.createElement("div");
     newMapParentDiv.classList.add("box");
     const newMapDiv = document.createElement("div");
     newMapDiv.id = `map${this.id}`;
-
-    console.log(`map${this.id}`);
     newMapParentDiv.appendChild(newMapDiv);
     defaultDiv.appendChild(newMapParentDiv);
-    console.log(this.latitude);
-    console.log(this.longitude);
     this.initializeMap(`map${this.id}`, this.latitude, this.longitude);
     if (
       document.getElementById(`default-div-${this.id}`) &&
@@ -234,7 +195,6 @@ class Div {
   //Initialize Map
   initializeMap(mapName, latitude, longitude) {
     var mapName = L.map(`${mapName}`).setView([latitude, longitude], 12);
-    console.log(`koordinati: lat:${latitude}, lon${longitude}`);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
       attribution:
         '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -242,29 +202,23 @@ class Div {
     id++;
     isEnteredValue = false;
     isEditMode = false;
-    console.log(isEditMode);
   }
 
   convertTimestamp(timestamp, gmtOffset) {
     if (gmtOffset > 0) {
       const newDate = new Date(timestamp * 1000 - 7200000);
-
       let year = newDate.getFullYear();
       let month = newDate.getMonth() + 1;
       let day = newDate.getDate();
       let hours = newDate.getHours();
       let minutes = newDate.getMinutes();
       let seconds = newDate.getSeconds();
-
       const newTime = document.getElementById(`zone-${this.id}`);
-
       setInterval(() => {
         seconds++;
-        console.log(seconds);
         if (seconds === 60) {
           minutes++;
           seconds = 0;
-          console.log(seconds);
         }
         if (minutes === 60) {
           hours++;
@@ -276,21 +230,17 @@ class Div {
     } else {
       const newDate = new Date(timestamp * 1000 - 7200000);
       const newTime = document.getElementById(`zone-${this.id}`);
-
       let year = newDate.getFullYear();
       let month = newDate.getMonth() + 1;
       let day = newDate.getDate();
       let hours = newDate.getHours();
       let minutes = newDate.getMinutes();
       let seconds = newDate.getSeconds();
-
       setInterval(() => {
         seconds++;
-        console.log(seconds);
         if (seconds === 60) {
           minutes++;
           seconds = 0;
-          console.log(seconds1);
         }
         if (minutes === 60) {
           hours++;
@@ -305,8 +255,6 @@ class Div {
   searchRegion(e) {
     e.preventDefault();
     // Here the this.id is changed to add-location-1 ?!?!?!?! why?!?
-    // this.createSecondBox(1713871218, 7200);
-
     let input = document.getElementById(`location-Input-${id}`);
     if (input) {
       let inputValue =
@@ -315,12 +263,9 @@ class Div {
       return inputValue;
     } else {
       alert("Please open a new search field");
-
       return;
     }
   }
-
-  trashOldMaterial() {}
 }
 
 //Reset page function
@@ -345,70 +290,10 @@ function createNewSearch() {
   }
   isEditMode = true;
   isEnteredValue = false;
-
   newCity.createFirstBox();
 }
 
 // Eventlisteners
-//
+
 resetBtn.addEventListener("click", resetPage);
 addNewSearchBtn.addEventListener("click", createNewSearch);
-
-//
-//
-
-// createDate() {
-//   if (this.gmtOffset > 0) {
-//     const newDate = new Date(this.timestamp * 1000 - 7200000);
-//     const newTime = document.getElementById(`zone-${this.id}`);
-
-//     let year = newDate.getFullYear();
-//     let month = newDate.getMonth() + 1;
-//     let day = newDate.getDate();
-//     let hours = newDate.getHours();
-//     let minutes = newDate.getMinutes();
-//     let seconds = newDate.getSeconds();
-
-//     setInterval(() => {
-//       seconds++;
-//       console.log(seconds1);
-//       if (seconds === 60) {
-//         minutes++;
-//         seconds = 0;
-//         console.log(seconds1);
-//       }
-//       if (minutes === 60) {
-//         hours++;
-//         minutes = 0;
-//       }
-//       newTime.innerHTML = `<p>Your location date: <p style="color: rgba(56, 17, 123)"> ${day}.${month}.${year}</p></p>
-//               <p>Your local time: <p style="color: rgba(56, 17, 123)"> ${hours}:${minutes}:${seconds}</p></p>`;
-//     }, 1000);
-//   } else {
-//     const newDate = new Date(this.timestamp * 1000 - 7200000);
-//     const newTime = document.getElementById(`zone-${this.id}`);
-
-//     let year = newDate.getFullYear();
-//     let month = newDate.getMonth() + 1;
-//     let day = newDate.getDate();
-//     let hours = newDate.getHours();
-//     let minutes = newDate.getMinutes();
-//     let seconds = newDate.getSeconds();
-
-//     setInterval(() => {
-//       seconds++;
-//       console.log(seconds1);
-//       if (seconds === 60) {
-//         minutes++;
-//         seconds = 0;
-//         console.log(seconds1);
-//       }
-//       if (minutes === 60) {
-//         hours++;
-//         minutes = 0;
-//       }
-//       newTime.innerHTML = `<p>Your location date: <p style="color: rgba(56, 17, 123)"> ${day}.${month}.${year}</p></p>
-//             <p>Your local time: <p style="color: rgba(56, 17, 123)"> ${hours}:${minutes}:${seconds}</p></p>`;
-//     }, 1000);
-//   }
-// }
