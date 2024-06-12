@@ -95,7 +95,7 @@ class Div {
   createDefaultDiv() {
     const location = document.getElementById("your-location-text");
     location.classList.add("text-box");
-    location.innerHTML = `<p> Your Location: </p> <p> ${this.location}  </p>`; // -- VNESI TUKA KAKO DA PROCITA LOKACIJA VSUSNOST!!! ...
+    location.innerHTML = `<p> Your Location: </p> <p> ${this.location}  </p>`; 
     getTimeZone().then((data) => {
       data.zones.forEach((country) => {
         if (country.zoneName.includes(this.location.split(",")[0])) {
