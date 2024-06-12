@@ -13,7 +13,7 @@ var isEnteredValue = true;
 // Load timezones API:
 async function getTimeZone() {
   const apiKey = `PA82PEZZOIPM`;
-  const apiUrl = `http://api.timezonedb.com/v2.1/list-time-zone?key=${apiKey}&format=json`;
+  const apiUrl = `https://api.timezonedb.com/v2.1/list-time-zone?key=${apiKey}&format=json`;
   const res = await fetch(apiUrl);
   let data = await res.json();
   window.myGlobalArray = data;
